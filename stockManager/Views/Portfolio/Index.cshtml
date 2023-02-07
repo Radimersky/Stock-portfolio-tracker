@@ -1,0 +1,278 @@
+﻿@model stockManager.ViewModels.ProductPortfolioViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/portfolioStyle.css" type="text/css" />
+</head>
+<h2>Portfolio</h2>
+<h5>If net earnings does not match then make sure that Products TICKER matches the one on finance.yahoo.com</h5>
+<span>Portfolio does not include dividends</span>
+<br />
+
+@*<table class="table table-datatable table­‐bordered table­‐hover compact">
+    <thead>
+        <tr>
+            <th>Ticker</th>
+            <th><b>Name</b></th>
+            <th>Amount Held</th>
+            <th>Stock Price Today</th>
+            <th>Money Invested</th>
+            <th>Total Value</th>
+            <th>With Fee Earnings</th>
+            <th>Net Earnings</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var productPortfolio in Model.ProductPortfolios)
+        {
+            <tr>
+                <td>@productPortfolio.Product.Ticker</td>
+                <td>@productPortfolio.Product.Name</td>
+                <td>@Math.Round(productPortfolio.Amount, 4)</td>
+                <td>@Math.Round(productPortfolio.ProductRealTimeData.CurrentPrice.Value, 2) @productPortfolio.ProductRealTimeData.CurrentPrice.Currency.Name</td>
+                <td>@Math.Round(productPortfolio.MoneyInvested.Value * -1, 2) @productPortfolio.MoneyInvested.Currency.Name</td>
+                <td>@Math.Round(productPortfolio.ProductTotalValue.Value, 2) @productPortfolio.ProductTotalValue.Currency.Name</td>
+                @if (productPortfolio.EarningsWithoutFees.Value < 0)
+                {
+                    <td>
+                        <span style="color:red;">@productPortfolio.EarningsWithoutFees.Value @productPortfolio.EarningsWithoutFees.Currency.Name (@productPortfolio.EarningsWithoutFeesPercentage%)</span>
+
+                        @if (productPortfolio.EarningsWithoutFees.Currency.Name != "EUR")
+                        {
+                            <br />
+                            <span style="color: red;">@Math.Round(productPortfolio.EarningsWithoutFees.ConvertTo("EUR").Value, 2) EUR</span>
+                        }
+                    </td>
+                    <td>
+                        <span style="color:red;">@productPortfolio.NetEarnings.Value @productPortfolio.NetEarnings.Currency.Name (@productPortfolio.NetEarningsPercentage%)</span>
+                        @if (productPortfolio.NetEarnings.Currency.Name != "EUR")
+                        {
+                            <br />
+
+                            <span style="color: red;">@Math.Round(productPortfolio.NetEarnings.ConvertTo("EUR").Value, 2) EUR</span>
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <b><span style="color:green;">@productPortfolio.EarningsWithoutFees.Value @productPortfolio.EarningsWithoutFees.Currency.Name (@productPortfolio.EarningsWithoutFeesPercentage%)</span></b>
+
+                        @if (productPortfolio.EarningsWithoutFees.Currency.Name != "EUR")
+                        {
+                            <br />
+                            <span style="color: green;">@Math.Round((productPortfolio.EarningsWithoutFees.ConvertTo("EUR").Value), 2) EUR</span>
+                        }
+                    </td>
+                    <td>
+                        <b><span style="color:green;">@productPortfolio.NetEarnings.Value @productPortfolio.NetEarnings.Currency.Name (@productPortfolio.NetEarningsPercentage%)</span></b>
+                        @if (productPortfolio.NetEarnings.Currency.Name != "EUR")
+                        {
+                            <br />
+
+                            <span style="color: green;">@Math.Round(productPortfolio.NetEarnings.ConvertTo("EUR").Value, 2) EUR</span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>*@
+
+<table id="tblReportResultsDemographics" class="display table­‐bordered table­‐hover compact" width="100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Amount owned</th>
+            <th>Price Per Stock</th>
+            <th>Invested</th>
+            <th>Value</th>
+            <th>Earnings Without Fees</th>
+            <th>Net Earnings</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Amount owned</th>
+            <th>Price Per Stock</th>
+            <th>Invested</th>
+            <th>Value</th>
+            <th>Earnings Without Fees</th>
+            <th>Net Earnings</th>
+        </tr>
+    </tfoot>
+</table>
+
+<table class="table table­‐bordered table­‐hover">
+    <thead>
+        <tr>
+            <th><b>Products Held</b></th>
+            <th><b>Total Money Invested</b></th>
+            <th><b>Total No Fee Earnings</b></th>
+            <th><b>Total Net Earnings</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Amount</td>
+            <td>@(Math.Round(Model.TotalMoneyInvested.Value, 3) * -1) @Model.TotalMoneyInvested.Currency.Name  </td>
+            <td>@Math.Round(Model.NoFeeEarnings.Value, 3) @Model.NoFeeEarnings.Currency.Name (@Model.NoFeeEarningsPercentage%) </td>
+            <td>@Math.Round(Model.NetEarnings.Value, 3) @Model.NetEarnings.Currency.Name (@Model.NetEarningsPercentage%)</td>
+        </tr>
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        /* Formatting function for row details */
+        function format(d) {
+            // `d` is the original data object for the row
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<tr>' +
+                    '<td>Dividend Date:</td>' +
+                    '<td>' + d.productRealTimeData.dividendDate + '</td>' +
+                    '<td>Regular Market Price:</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.regularMarketPrice.toFixed(2)) + '</td>' +
+                    '<td>Forward PE:</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.forwardPE.toFixed(2)) + '</td>' +
+                    '<td>Fifty Two Week High:</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.fiftyTwoWeekHigh.toFixed(2)) + '</td>' +
+                '</tr>' +
+
+                '<tr>' +
+                    '<td>Ex Dividend Date:</td>' +
+                    '<td>' + d.productRealTimeData.exDividendDate + '</td>' +
+                    '<td>Regular Market Change:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.regularMarketChange.toFixed(2)) + " (" + parseFloat(d.productRealTimeData.regularMarketChangePercent.toFixed(2)) + "%)" + '</td>' +
+                    '<td>Trailing PE:</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.trailingPE.toFixed(2)) + '</td>' +
+                    '<td>Fifty Two Week High Change:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.fiftyTwoWeekHighChange.toFixed(2)) + " (" + parseFloat(d.productRealTimeData.fiftyTwoWeekHighChangePercent.toFixed(2)) + "%)" + '</td>' +
+                '</tr>' +
+
+                '<tr>' +
+                    '<td>Trailing Annual Dividend Rate:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.trailingAnnualDividendRate.toFixed(2)) + '</td>' +
+                    '<td>EPS Forward:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.epsForward.toFixed(2)) + '</td>' +
+                    '<td>Book Value:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.bookValue.toFixed(2)) + '</td>' +
+                    '<td>Fifty Two Week Low:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.fiftyTwoWeekLow.toFixed(2)) + '</td>' +
+                '</tr>' +
+
+                '<tr>' +
+                    '<td>Trailing Annual Dividend Yield:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.trailingAnnualDividendYield.toFixed(2)) + '</td>' +
+                    '<td>EPS Trailing Twelve Months:</td>' +
+                        '<td>' + parseFloat(d.productRealTimeData.epsTrailingTwelveMonths.toFixed(2)) + '</td>' +
+                    '<td>Shares Outstanding</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.sharesOutstanding.toFixed(2)) + '</td>' +
+                    '<td>Fifty Two Week Low Change:</td>' +
+                    '<td>' + parseFloat(d.productRealTimeData.fiftyTwoWeekLowChange.toFixed(2)) + " (" + parseFloat(d.productRealTimeData.fiftyTwoWeekLowChangePercent.toFixed(2)) + "%)" + '</td>' +
+                '</tr>' +
+                '</table>';
+        }
+
+        function getColor(number) {
+            if (number >= 0) {
+                return "green";
+            }
+
+            return "red";
+        }
+
+        $(document).ready(function() {
+            $('.table-datatable').DataTable();
+
+
+            var aDemoItems = (@Html.Raw(Json.Serialize(Model))).productPortfolios;
+
+            //Load  datatable
+            var oTblReport = $("#tblReportResultsDemographics");
+
+
+            var table = oTblReport.DataTable({
+                "data": aDemoItems,
+                "columns": [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ''
+                    },
+                    { "data": "product.ticker" },
+                    { "data": "product.name" },
+                    { "data": "amount" },
+                    {
+                        "data": "productRealTimeData",
+                        "render": function(data, type, row, meta) {
+
+                            return parseFloat(data.currentPrice.value.toFixed(2)) + " " + data.currentPrice.currency.name;
+                        }
+                    },
+                    {
+                        "data": "moneyInvested",
+                        "render": function(data, type, row, meta) {
+
+                            return parseFloat((data.value.toFixed(2) * -1)) + " " + data.currency.name;
+                        }
+                    },
+                    {
+                        "data": "productTotalValue",
+                        "render": function(data, type, row, meta) {
+
+                            return parseFloat(data.value.toFixed(2)) + " " + data.currency.name;
+                        }
+                    },
+                    {
+                        "data": "earningsWithoutFees",
+                        "render": function(data, type, row, meta) {
+
+                            return "<span style=color:" + getColor(data.value) + ";>" + parseFloat(data.value.toFixed(2)) + " " + data.currency.name + " (" + row.earningsWithoutFeesPercentage + "%)" + "<span>";
+                        }
+                    },
+                    {
+                        "data": "netEarnings",
+                        "render": function (data, type, row, meta) {
+                            return "<span style=color:" + getColor(data.value) + ";>" + parseFloat(data.value.toFixed(2)) + " " + data.currency.name + " (" + row.netEarningsPercentage + "%)" + "<span>";
+                        }
+                    }
+                ]
+            });
+
+            // Add event listener for opening and closing details
+            $('#tblReportResultsDemographics tbody').on('click',
+                'td.details-control',
+                function() {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+        });
+
+
+    </script>
+
+
+
+}
+

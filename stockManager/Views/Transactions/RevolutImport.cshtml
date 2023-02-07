@@ -1,0 +1,21 @@
+﻿@model stockManager.ViewModels.ImportTransactionsViewModel
+
+@{
+    ViewBag.Title = "RevolutImport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("RevolutImport", "Transactions"))
+{
+    <h2><b>REVOLUT</b> CSV Import</h2>
+    <p>Paste exported transactions below</p>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(m => m.CSV)
+        @Html.TextAreaFor(m => m.CSV, new { @class = "form-control", required = "required" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Import</button>
+
+}

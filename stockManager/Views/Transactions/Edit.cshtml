@@ -1,0 +1,124 @@
+﻿@model stockManager.ViewModels.NewTransactionViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Transaction</h2>
+
+@using (Html.BeginForm("Save", "Transactions"))
+{
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Transaction.DateTime)
+                @Html.TextBoxFor(m => m.Transaction.DateTime, new { @class = "datepicker", required = "required" })
+                @Html.ValidationMessageFor(m => m.Transaction.DateTime)
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Transaction.Product)
+                @Html.DropDownListFor(m => m.Transaction.Product.Id, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Transaction.Market)
+                @Html.DropDownListFor(m => m.Transaction.Market.Id, new SelectList(Model.Markets, "Id", "Name"), "Select Market", new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-2">
+                @Html.LabelFor(m => m.Transaction.Amount)
+                @Html.TextBoxFor(m => m.Transaction.Amount, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="form-group col-md-2">
+                @Html.LabelFor(m => m.Transaction.ExchangeRate)
+                @Html.TextBoxFor(m => m.Transaction.ExchangeRate, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group checkbox col-md-4">
+                @Html.LabelFor(m => m.Transaction.IsBuy)
+                <br />
+                @Html.CheckBoxFor(m => m.Transaction.IsBuy) Check if yes
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-2">
+                @Html.LabelFor(m => m.Transaction.StockPrice)
+                @Html.TextBoxFor(m => m.Transaction.StockPrice, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-3">
+                @Html.LabelFor(m => m.Transaction.StockPriceCurrencyId)
+                @Html.DropDownListFor(m => m.Transaction.StockPriceCurrencyId, new SelectList(Model.Currencies, "Id", "Name"), "Select Currency", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-2">
+                @Html.LabelFor(m => m.Transaction.TransactionCosts)
+                @Html.TextBoxFor(m => m.Transaction.TransactionCosts, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="form-group col-md-3">
+                @Html.LabelFor(m => m.Transaction.TransactionCostsCurrencyId)
+                @Html.DropDownListFor(m => m.Transaction.TransactionCostsCurrencyId, new SelectList(Model.Currencies, "Id", "Name"), "Select Currency", new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group col-md-2">
+                @Html.LabelFor(m => m.Transaction.TotalValue)
+                @Html.TextBoxFor(m => m.Transaction.TotalValue, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="form-group col-md-3">
+                @Html.LabelFor(m => m.Transaction.TotalValueCurrencyId)
+                @Html.DropDownListFor(m => m.Transaction.TotalValueCurrencyId, new SelectList(Model.Currencies, "Id", "Name"), "Select Currency", new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.Note)
+        @Html.TextBoxFor(m => m.Transaction.Note, new { @class = "form-control" })
+    </div>
+
+    @Html.HiddenFor(m => m.Transaction.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+
+}
+
+@section scripts
+{
+    <script>
+        $('.datepicker').datetimepicker({
+            format: 'DD.MM.YYYY h:mm a',
+            formatTime: 'h:mm a',
+            formatDate: 'DD.MM.YYYY'
+        });
+
+        $.datetimepicker.setDateFormatter('moment');
+    </script>
+}

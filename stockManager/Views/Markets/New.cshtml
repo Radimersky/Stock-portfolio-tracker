@@ -1,0 +1,61 @@
+﻿@model stockManager.ViewModels.NewMarketViewModel
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Market List</h2>
+<table class="table table­‐bordered table­‐hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>MIC</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var market in Model.Markets)
+        {
+            <tr>
+                <td>@market.Name</td>
+                <td>@market.MIC</td>
+                <td>@Html.ActionLink("Edit", "Edit", "Markets", new { id = market.Id }, new { @class = "btn btn-primary" })</td>
+                <td>@Html.ActionLink("Remove", "Remove", "Markets", new { id = market.Id }, new { @class = "btn btn-danger" })</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@using (Html.BeginForm("Save", "Markets"))
+{
+    <h2>Add New Market</h2>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Market.Name)
+        @Html.TextBoxFor(m => m.Market.Name, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Market.MIC)
+        @Html.TextBoxFor(m => m.Market.MIC, new { @class = "form-control", required = "required" })
+        @Html.ValidationMessageFor(m => m.Market.MIC)
+    </div>
+
+    @Html.HiddenFor(m => m.Market.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+
+}
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}

@@ -1,0 +1,75 @@
+﻿@model stockManager.ViewModels.NewProductViewModel
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Save", "Products"))
+{
+    <h2>Product List</h2>
+    <table class="table table­‐bordered table­‐hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Ticker</th>
+                <th>ISIN</th>
+                <th>Currency</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Ticker</td>
+                    <td>@product.ISIN</td>
+                    <td>@product.ProductCurrency.Name</td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Products", new { id = product.Id }, new { @class = "btn btn-primary" })</td>
+                    <td>@Html.ActionLink("Remove", "Remove", "Products", new { id = product.Id }, new { @class = "btn btn-danger" })</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Add New Product</h2>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Product.Name)
+        @Html.TextBoxFor(m => m.Product.Name, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Product.Ticker)
+        @Html.TextBoxFor(m => m.Product.Ticker, new { @class = "form-control", required = "required" })
+        @Html.ValidationMessageFor(m => m.Product.Ticker)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Product.ISIN)
+        @Html.TextBoxFor(m => m.Product.ISIN, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(m => m.Product.ProductCurrencyId)
+        @Html.DropDownListFor(m => m.Product.ProductCurrencyId, new SelectList(Model.Currencies, "Id", "Name"), "Select Currency", new { @class = "form-control", required = "required" })
+    </div>
+
+    @Html.HiddenFor(m => m.Product.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+
+}
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}

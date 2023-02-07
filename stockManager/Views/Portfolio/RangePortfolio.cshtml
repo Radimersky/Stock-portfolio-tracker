@@ -1,0 +1,96 @@
+﻿@model stockManager.ViewModels.RangePortfolioViewModel;
+
+@{
+    ViewBag.Title = "Range portfolio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Portfolio @Model.dateFrom.ToString("d.M.yyyy") - @Model.dateTo.ToString("d.M.yyyy")</h2>
+<span>Portfolio does not include dividends</span>
+<br />
+
+<table class="table table-datatable table­‐bordered table­‐hover compact">
+    <thead>
+        <tr>
+            <th>Tickers</th>
+            <th><b>Name</b></th>
+            <th>Bought Amount</th>
+            <th>Sold Amount</th>
+            <th>Total Invested</th>
+            <th>Total Returned From Sell</th>
+            <th>Sold Earnings</th>
+            <th>Not Sold Earnings</th>
+            <th>Price in @Model.dateTo.ToString("d.M.yyyy")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var portfolio in Model.rangeProductPortfolios)
+        {
+            <tr>
+                <td>@portfolio.Product.Ticker</td>
+                <td>@portfolio.Product.Name</td>
+                <td>@Math.Round(portfolio.BoughtStockAmountAfterDateFrom, 4)</td>
+                <td>@Math.Round(portfolio.SoldStockAmountAfterDateFrom, 4)</td>
+                <td>@Math.Round(portfolio.TotalMoneyInvested.Value, 2) @portfolio.TotalMoneyInvested.Currency.Name</td>
+                <td>@Math.Round(portfolio.MoneyReturnBySelling.Value, 2) @portfolio.MoneyReturnBySelling.Currency.Name</td>
+                <td>@Math.Round(portfolio.SoldStockEarnings.Value, 2) @portfolio.SoldStockEarnings.Currency.Name</td>
+                <td>@Math.Round(portfolio.UnsoldStocksEarnings.Value, 2) @portfolio.UnsoldStocksEarnings.Currency.Name (@Math.Round(portfolio.UnsoldStocksEarningsPercentage)%)</td>
+                <td>@Math.Round(portfolio.StockPriceCandleInDateTo.Close, 2) @portfolio.Product.ProductCurrency.Name</td>
+
+                @*@if (portfolio.EarningsWithoutFees.Value < 0)
+                    {
+                        <td>
+                            <span style="color:red;">@portfolio.EarningsWithoutFees.Value @portfolio.EarningsWithoutFees.Currency.Name (@portfolio.EarningsWithoutFeesPercentage%)</span>
+
+                            @if (portfolio.EarningsWithoutFees.Currency.Name != "EUR")
+                            {
+                                <br />
+                                <span style="color: red;">@Math.Round(portfolio.EarningsWithoutFees.ConvertTo("EUR").Value, 2) EUR</span>
+                            }
+                        </td>
+                        <td>
+                            <span style="color:red;">@portfolio.NetEarnings.Value @portfolio.NetEarnings.Currency.Name (@portfolio.NetEarningsPercentage%)</span>
+                            @if (portfolio.NetEarnings.Currency.Name != "EUR")
+                            {
+                                <br />
+
+                                <span style="color: red;">@Math.Round(portfolio.NetEarnings.ConvertTo("EUR").Value, 2) EUR</span>
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <b><span style="color:green;">@portfolio.EarningsWithoutFees.Value @portfolio.EarningsWithoutFees.Currency.Name (@portfolio.EarningsWithoutFeesPercentage%)</span></b>
+
+                            @if (portfolio.EarningsWithoutFees.Currency.Name != "EUR")
+                            {
+                                <br />
+                                <span style="color: green;">@Math.Round((portfolio.EarningsWithoutFees.ConvertTo("EUR").Value), 2) EUR</span>
+                            }
+                        </td>
+                        <td>
+                            <b><span style="color:green;">@portfolio.NetEarnings.Value @portfolio.NetEarnings.Currency.Name (@portfolio.NetEarningsPercentage%)</span></b>
+                            @if (portfolio.NetEarnings.Currency.Name != "EUR")
+                            {
+                                <br />
+
+                                <span style="color: green;">@Math.Round(portfolio.NetEarnings.ConvertTo("EUR").Value, 2) EUR</span>
+                            }
+                        </td>
+                    }*@
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.table-datatable').DataTable();
+        });
+    </script>
+
+}

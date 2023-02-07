@@ -1,0 +1,20 @@
+﻿@model stockManager.ViewModels.ImportTransactionsViewModel
+
+@{
+    ViewBag.Title = "Import";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("DegiroImport", "Transactions"))
+{
+    <h2><b>DEGIRO</b> CSV Import</h2>
+    <p>Paste exported transactions below</p>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(m => m.CSV)
+        @Html.TextAreaFor(m => m.CSV, new { @class = "form-control", required = "required" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Import</button>
+
+}

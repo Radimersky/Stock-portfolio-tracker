@@ -1,0 +1,32 @@
+﻿@model stockManager.ViewModels.ChartViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script src="//cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.widgets.js"></script>   
+    <script src="//cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+</head>
+<body>
+    <div>
+        @if ((bool) ViewData["Failed"])
+        {
+        <h2>Cannot find @ViewData["ExceptionStock"] in Yahoo finance. Go to Products page and change ticker to name that matches the one on https://finance.yahoo.com/</h2>
+        }
+        else
+        {
+            <div id = "chartContainer" > @Html.Raw(ViewData["Chart"])</div>
+        }
+    </div>
+
+</body>
+
+<script>
+    console.log(@Json.Serialize(ViewData["Chart"]));
+</script>
+</html>

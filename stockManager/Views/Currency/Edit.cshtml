@@ -1,0 +1,24 @@
+﻿@model stockManager.Models.Currency
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Save", "Currency"))
+{
+
+    <h2>Edit Currency</h2>
+
+    <div class="form-group">
+        <h3>Enter new value</h3>
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+
+}

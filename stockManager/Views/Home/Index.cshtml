@@ -1,0 +1,19 @@
+﻿@model stockManager.ViewModels.HomeViewModel
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Latest news</h1>
+    
+    @foreach (var news in Model.News)
+    {
+        <div>
+            <p>
+                <a href="@news.Url" target="_blank">@news.Title</a>
+            </p>
+            <hr>
+        </div>
+    }
+</div>
